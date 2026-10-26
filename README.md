@@ -46,4 +46,8 @@ Full documentation will be available soon.
 Ideas, suggestions and PRs are welcome!
 See [open issues](https://github.com/vlopess/Petal-Test/issues) or open a new one ✨
 
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ![](https://github.com/vlopess/Pearl-Test/blob/main/soon.GIF?raw=true)
