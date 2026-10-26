@@ -4,7 +4,7 @@
 
 A minimalist, simple test package for Dart 
 
-![status](https://img.shields.io/badge/status-not_started-brightgreen.svg?style=flat)
+![status](https://img.shields.io/badge/status-development-brightgreen.svg?style=flat)
 
 
 ## ✨ Quick example
