@@ -4,7 +4,6 @@
 library;
 
 
-
 /// Before each test, petal test will execute this (SetUp)
 class BeforeEach {
   const BeforeEach();

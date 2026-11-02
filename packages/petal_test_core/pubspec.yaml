@@ -1,0 +1,11 @@
+name: petal_test_core
+description: Core of the framework for test discovery, execution, and test results.
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace
+
+dependencies:
+  petal_test_annotations: ^0.1.0

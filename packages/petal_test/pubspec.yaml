@@ -1,0 +1,8 @@
+name: petal_test
+description: Public API for writing and running tests.
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace

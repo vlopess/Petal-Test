@@ -1,5 +1,6 @@
-name: petal_test
+name: petal_test_workspace
 description: A starting point for Dart libraries or applications.
+publish_to: none
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
@@ -8,8 +9,18 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  petal_test_annotations: ^0.1.0
+  petal_test_core: ^0.1.0
+  petal_test_cli: ^0.1.0
+  petal_test: ^0.1.0
   # path: ^1.8.0
 
 dev_dependencies:
-  lints: ^5.0.0
+  lints: ^6.1.0
   test: ^1.24.0
+
+workspace:
+  - packages/petal_test
+  - packages/petal_test_core
+  - packages/petal_test_annotations
+  - packages/petal_test_cli

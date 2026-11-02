@@ -1,0 +1,8 @@
+name: petal_test_annotations
+description: Notes used to identify tests and configurations.
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace

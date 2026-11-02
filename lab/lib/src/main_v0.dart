@@ -1,7 +1,7 @@
 import 'dart:mirrors' show InstanceMirror, MethodMirror, reflect;
 
-import 'package:petal_test/src/annotations/annotation.dart';
-import 'package:petal_test/src/extensions/extensions.dart';
+import 'package:petal_test_annotations/petal_test_annotations.dart';
+import 'package:petal_test_core/src/extensions/extensions.dart';
 
 
 
@@ -54,17 +54,20 @@ void main(List<String> arguments) {
       final Only? onlyOne = methodMirror.metadata
           .firstWhereOrNull((metadata) => metadata.reflectee is Only)?.reflectee;
 
-      if(methodMirror.metadata.firstWhereOrNull((metadata) => 
-                            metadata.reflectee is ParameterizedTest) != null){
-        ValueSource? data = methodMirror.metadata.firstWhereOrNull((metadata) => 
-                            metadata.reflectee is ValueSource)?.reflectee;
+      if(onlyOne != null) {
+        if(methodMirror.metadata.firstWhereOrNull((metadata) => 
+                              metadata.reflectee is ParameterizedTest) != null){
+          final ValueSource? data = methodMirror.metadata.firstWhereOrNull((metadata) => 
+                              metadata.reflectee is ValueSource)?.reflectee;
 
-        if(data != null) params = data.currentData;                                                             
+          if(data != null) params = data.currentData;                                                             
+        }
+
+        if(methodMirror.metadata.firstWhereOrNull((metadata) => metadata.reflectee is Disabled) == null) {
+          onlyOneAnnotation = methodMirror;      
+        }
       }
 
-      if(onlyOne != null && methodMirror.metadata.firstWhereOrNull((metadata) => metadata.reflectee is Disabled) == null) {
-        onlyOneAnnotation = methodMirror;      
-      }
     }     
 
   });
@@ -85,6 +88,8 @@ void main(List<String> arguments) {
 
       final InstanceMirror? testMethod = methodMirror.metadata
           .firstWhereOrNull((metadata) => metadata.reflectee is Test);
+
+      if(testMethod == null) return;
       
       if(methodMirror.metadata.firstWhereOrNull((metadata) => metadata.reflectee is Disabled) != null) return;
 
@@ -95,22 +100,20 @@ void main(List<String> arguments) {
         count = repeatedTestAnnotation.value;
       }
 
-      if (testMethod != null) {
-        if(methodMirror.metadata.firstWhereOrNull((metadata) => 
-                            metadata.reflectee is ParameterizedTest) != null){
-          ValueSource? data = methodMirror.metadata.firstWhereOrNull((metadata) => 
-                              metadata.reflectee is ValueSource)?.reflectee;
-                              
-          if(data != null) params = data.currentData;                                                             
-        }
-
-        final DisplayName? displayTestAnnotation = methodMirror.metadata.
-                                                firstWhereOrNull((metadata) => metadata.reflectee is DisplayName)?.reflectee;
-
-        if(displayTestAnnotation != null) print("\t${displayTestAnnotation.displayName}:\n");
-
-        invoke(count, setUpAnnotation, reflectedClassTest, methodMirror, tearDownAnnotation, values: params);
+      if(methodMirror.metadata.firstWhereOrNull((metadata) => 
+                          metadata.reflectee is ParameterizedTest) != null){
+        final ValueSource? data = methodMirror.metadata.firstWhereOrNull((metadata) => 
+                            metadata.reflectee is ValueSource)?.reflectee;
+                            
+        if(data != null) params = data.currentData;                                                             
       }
+
+      final DisplayName? displayTestAnnotation = methodMirror.metadata.
+                                              firstWhereOrNull((metadata) => metadata.reflectee is DisplayName)?.reflectee;
+
+      if(displayTestAnnotation != null) print("\t${displayTestAnnotation.displayName}:\n");
+
+      invoke(count, setUpAnnotation, reflectedClassTest, methodMirror, tearDownAnnotation, values: params);
 
     });
   }
@@ -120,47 +123,39 @@ void main(List<String> arguments) {
 
 }
 
-void invoke(int count, MethodMirror? setUpAnnotation, InstanceMirror reflectedClassTest, MethodMirror methodMirror, MethodMirror? tearDownAnnotation, {List<dynamic>? values = const []}) {
+void invoke(int count, MethodMirror? setUpAnnotation, InstanceMirror reflectedClassTest, MethodMirror methodMirror, MethodMirror? tearDownAnnotation, {List<dynamic>? values}) {
   if(values != null) count = values.length;
   for (var i = 0; i < count; i++) {
     if(setUpAnnotation != null) reflectedClassTest.invoke(setUpAnnotation.simpleName, []);
-    reflectedClassTest.invoke(methodMirror.simpleName, [values?[i]]);
+    final value = values?[i];
+    reflectedClassTest.invoke(
+      methodMirror.simpleName,
+      value != null ? [value] : [],
+    );
     if(tearDownAnnotation != null) reflectedClassTest.invoke(tearDownAnnotation.simpleName, []);
   }
 }
 
 class ClassTest {
 
-  ///TODO: 
-  ///Verificar a existência de somente um por classe
-  ///Somente uma anotação
   @BeforeAll()
   void init(){
     print("Init Test");
     print("=====================");    
   }
 
-  ///TODO: 
-  ///Verificar a existência de somente um por classe
-  ///Somente uma anotação
   @AfterAll()
   void dispose(){
     print("Dispose Test");
     print("=====================");    
   }
 
-  ///TODO: 
-  ///Verificar a existência de somente um por classe
-  ///Somente uma anotação
   @BeforeEach()
   void setUp() {
     print("Before Each Test");
     print("=====================");
   }
 
-  ///TODO: 
-  ///Verificar a existência de somente um por classe
-  ///Somente uma anotação
   @AfterEach()
   void tearDown() {
     print("=====================");
@@ -168,20 +163,9 @@ class ClassTest {
     print("---------------------");
   }
 
-  ///TODO: 
-  ///Uma anotação por método
   @Test()
-
-  ///TODO: 
-  ///Uma anotação por método
   @DisplayName(displayName: "Esse teste vai repetir várias vezes")
-  
-  ///TODO: 
-  ///Uma anotação por método
   @RepeatedTest(value: 3)
-
-  ///TODO: 
-  ///Uma anotação por método
   @Disabled()
   void test1(){
     print('Eu sou o teste 1 e repito várias vezes');
@@ -195,23 +179,14 @@ class ClassTest {
   }
 
   @Test()
-  ///TODO: 
-  ///Uma anotação por método
-  @Only()
   void test3(){
     print('Eu sou o teste 3.');
   }
 
   @Test()
-
-  ///TODO: 
-  ///Uma anotação por método
-  ///ParameterizedTest 1 -- 1 ValueSource
-  ///ValueSource.T, sendo T == Type Param
   @ParameterizedTest()
   @ValueSource.int([1, 2, 3, 4, 5])
   void test4(int value){
     print("Eu sou o número $value");
   }
 }
-

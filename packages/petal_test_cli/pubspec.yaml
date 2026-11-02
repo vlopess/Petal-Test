@@ -1,0 +1,11 @@
+name: petal_test_cli
+description: Command-line interface for the Petal Test framework.
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace
+
+dependencies:
+  petal_test_core: ^0.1.0
