@@ -8,7 +8,8 @@ analyzer:
 
 linter:
   rules:
-    - always_declare_return_types
-    - prefer_final_locals
-    - avoid_print
-    - directives_ordering
+    always_declare_return_types: true
+    prefer_final_locals: true
+    avoid_print: true
+    directives_ordering: true
+    curly_braces_in_flow_control_structures: false
