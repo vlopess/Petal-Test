@@ -71,6 +71,10 @@ class TestDiscovery {
         argumentSets.addAll(source!.currentData!.map<List<Object?>>((value) => [value]).toList());
       }
 
+      if (parameterized == null) {
+        _validateArguments(method, const []);
+      }
+
       for (final arguments in argumentSets) {
         _validateArguments(method, arguments);
       }
